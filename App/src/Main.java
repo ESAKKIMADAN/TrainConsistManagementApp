@@ -1,31 +1,29 @@
-import java.util.LinkedList;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("=== Train Consist Management App — UC4 ===");
+        System.out.println("=== Train Consist Management App — UC5 ===");
 
-        // 1. Create a LinkedList<String> for the consist
-        LinkedList<String> trainConsist = new LinkedList<>();
+        // 1. Create a LinkedHashSet<String> to represent the train formation
+        Set<String> trainFormation = new LinkedHashSet<>();
 
-        // 2. Add bogies: Engine, Sleeper, AC, Cargo, Guard
-        trainConsist.add("Engine");
-        trainConsist.add("Sleeper");
-        trainConsist.add("AC");
-        trainConsist.add("Cargo");
-        trainConsist.add("Guard");
+        // 2. Attach bogies: Engine, Sleeper, Cargo, Guard
+        trainFormation.add("Engine");
+        trainFormation.add("Sleeper");
+        trainFormation.add("Cargo");
+        trainFormation.add("Guard");
 
-        System.out.println("Initial consist: " + trainConsist);
+        System.out.println("Bogies attached in sequence.");
 
-        // 3. Insert a Pantry Car at position 2 (between Sleeper and AC)
-        System.out.println("Inserting Pantry Car at position 2...");
-        trainConsist.add(2, "Pantry Car");
+        // 3. Attempt to attach a duplicate bogie intentionally
+        System.out.println("Attempting to attach 'Sleeper' again...");
+        trainFormation.add("Sleeper");
 
-        // 4. Remove the first and last bogie
-        System.out.println("Removing first and last bogies (Engine and Guard)...");
-        trainConsist.removeFirst();
-        trainConsist.removeLast();
+        // 4. Display the final formation order
+        System.out.println("Final Train Formation (Order Maintained): " + trainFormation);
 
-        // 5. Display the final ordered train consist
-        System.out.println("Final ordered train consist: " + trainConsist);
+        // 5. Verification
+        System.out.println("Total unique bogies in formation: " + trainFormation.size());
     }
 }
