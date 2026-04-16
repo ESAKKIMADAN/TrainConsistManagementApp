@@ -1,13 +1,33 @@
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
-void main() {
-    //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-    // to see how IntelliJ IDEA suggests fixing it.
-    IO.println(String.format("Hello and welcome!"));
+import java.util.ArrayList;
+import java.util.List;
 
-    for (int i = 1; i <= 5; i++) {
-        //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-        // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-        IO.println("i = " + i);
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("=== Train Consist Management App — UC2 ===");
+
+        // 1. Create an ArrayList<String> for passenger bogies
+        List<String> passengerBogies = new ArrayList<>();
+
+        // 2. Add bogies: Sleeper, AC Chair, First Class
+        passengerBogies.add("Sleeper");
+        passengerBogies.add("AC Chair");
+        passengerBogies.add("First Class");
+
+        // 3. Print the list after insertion
+        System.out.println("Passenger bogies added: " + passengerBogies);
+
+        // 4. Remove one bogie (AC Chair)
+        System.out.println("Removing AC Chair...");
+        passengerBogies.remove("AC Chair");
+
+        // 5. Use contains() to check if Sleeper exists
+        if (passengerBogies.contains("Sleeper")) {
+            System.out.println("Bogie 'Sleeper' exists in the consist.");
+        } else {
+            System.out.println("Bogie 'Sleeper' not found.");
+        }
+
+        // 6. Print final list state
+        System.out.println("Final passenger bogie list: " + passengerBogies);
     }
 }
