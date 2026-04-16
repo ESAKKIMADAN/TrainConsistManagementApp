@@ -1,27 +1,28 @@
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("=== Train Consist Management App — UC7 ===");
+        System.out.println("=== Train Consist Management App — UC8 ===");
 
         // 1. Create a List<Bogie> to store passenger bogies
         List<Bogie> passengerBogies = new ArrayList<>();
-
-        // 2. Add bogies like Sleeper, AC Chair, and First Class with capacities
         passengerBogies.add(new Bogie("Sleeper", 72));
         passengerBogies.add(new Bogie("AC Chair", 56));
         passengerBogies.add(new Bogie("First Class", 24));
 
-        System.out.println("Bogies before sorting: " + passengerBogies);
+        System.out.println("Full Bogie List: " + passengerBogies);
 
-        // 3. Use Comparator.comparingInt() to define sorting based on capacity
-        passengerBogies.sort(Comparator.comparingInt(Bogie::getCapacity));
+        // 2. Use the Stream API to filter bogies with capacity > 60
+        System.out.println("Filtering bogies with capacity > 60...");
+        List<Bogie> highCapacityBogies = passengerBogies.stream()
+                .filter(bogie -> bogie.getCapacity() > 60)
+                .collect(Collectors.toList());
 
-        // 4. Sort the list and display the sorted bogies
-        System.out.println("Sorted Bogies by Capacity:");
-        for (Bogie bogie : passengerBogies) {
+        // 3. Display the filtered bogies
+        System.out.println("Filtered Bogies (High Capacity):");
+        for (Bogie bogie : highCapacityBogies) {
             System.out.println("Bogie: " + bogie.getName() + ", Capacity: " + bogie.getCapacity() + " seats");
         }
     }
