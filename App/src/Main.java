@@ -3,17 +3,31 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        // Step 1: Print welcome message
-        System.out.println("=== Train Consist Management App ===");
+        System.out.println("=== Train Consist Management App — UC2 ===");
 
-        // Step 2: Initialize an empty List using ArrayList
-        // We use the List interface for abstraction and ArrayList for dynamic sizing
-        List<String> bogieList = new ArrayList<>();
+        // 1. Create an ArrayList<String> for passenger bogies
+        List<String> passengerBogies = new ArrayList<>();
 
-        // Step 3: Display the initial bogie count using size()
-        System.out.println("Train consist initialized with " + bogieList.size() + " bogies.");
+        // 2. Add bogies: Sleeper, AC Chair, First Class
+        passengerBogies.add("Sleeper");
+        passengerBogies.add("AC Chair");
+        passengerBogies.add("First Class");
 
-        // Continued execution...
-        System.out.println("Program continues...");
+        // 3. Print the list after insertion
+        System.out.println("Passenger bogies added: " + passengerBogies);
+
+        // 4. Remove one bogie (AC Chair)
+        System.out.println("Removing AC Chair...");
+        passengerBogies.remove("AC Chair");
+
+        // 5. Use contains() to check if Sleeper exists
+        if (passengerBogies.contains("Sleeper")) {
+            System.out.println("Bogie 'Sleeper' exists in the consist.");
+        } else {
+            System.out.println("Bogie 'Sleeper' not found.");
+        }
+
+        // 6. Print final list state
+        System.out.println("Final passenger bogie list: " + passengerBogies);
     }
 }
