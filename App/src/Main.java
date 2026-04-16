@@ -1,30 +1,28 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("=== Train Consist Management App — UC8 ===");
+        System.out.println("=== Train Consist Management App — UC9 ===");
 
-        // 1. Create a List<Bogie> to store passenger bogies
+        // 1. Create a List<Bogie> with multiple bogie objects, including some duplicates
         List<Bogie> passengerBogies = new ArrayList<>();
+        passengerBogies.add(new Bogie("Sleeper", 72));
         passengerBogies.add(new Bogie("Sleeper", 72));
         passengerBogies.add(new Bogie("AC Chair", 56));
         passengerBogies.add(new Bogie("First Class", 24));
 
-        System.out.println("Full Bogie List: " + passengerBogies);
+        System.out.println("Original Bogie List: " + passengerBogies);
 
-        // 2. Use the Stream API to filter bogies with capacity > 60
-        System.out.println("Filtering bogies with capacity > 60...");
-        List<Bogie> highCapacityBogies = passengerBogies.stream()
-                .filter(bogie -> bogie.getCapacity() > 60)
-                .collect(Collectors.toList());
+        // 2. Use the Stream API to group bogies by name
+        System.out.println("Grouping bogies by type...");
+        Map<String, List<Bogie>> groupedBogies = passengerBogies.stream()
+                .collect(Collectors.groupingBy(Bogie::getName));
 
-        // 3. Display the filtered bogies
-        System.out.println("Filtered Bogies (High Capacity):");
-        for (Bogie bogie : highCapacityBogies) {
-            System.out.println("Bogie: " + bogie.getName() + ", Capacity: " + bogie.getCapacity() + " seats");
-        }
+        // 3. Display the grouped result
+        System.out.println("Grouped Result (Map): " + groupedBogies);
     }
 
     // Static inner class Bogie
