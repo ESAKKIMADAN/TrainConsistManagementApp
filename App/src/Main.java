@@ -1,25 +1,29 @@
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("=== Train Consist Management App — UC3 ===");
+        System.out.println("=== Train Consist Management App — UC5 ===");
 
-        // 1. Create a HashSet<String> for bogie IDs
-        Set<String> bogieIds = new HashSet<>();
+        // 1. Create a LinkedHashSet<String> to represent the train formation
+        Set<String> trainFormation = new LinkedHashSet<>();
 
-        // 2. Add multiple bogie IDs, including intentional duplicates
-        bogieIds.add("BG101");
-        bogieIds.add("BG102");
-        bogieIds.add("BG101"); // Intentional duplicate
-        bogieIds.add("BG103");
+        // 2. Attach bogies: Engine, Sleeper, Cargo, Guard
+        trainFormation.add("Engine");
+        trainFormation.add("Sleeper");
+        trainFormation.add("Cargo");
+        trainFormation.add("Guard");
 
-        // 3. Print the final set
-        System.out.println("Bogie IDs registered: " + bogieIds);
+        System.out.println("Bogies attached in sequence.");
 
-        // 4. Observe that duplicates are removed automatically
-        System.out.println("Total unique bogies: " + bogieIds.size());
-        
-        System.out.println("Deduplication logic verified using HashSet.");
+        // 3. Attempt to attach a duplicate bogie intentionally
+        System.out.println("Attempting to attach 'Sleeper' again...");
+        trainFormation.add("Sleeper");
+
+        // 4. Display the final formation order
+        System.out.println("Final Train Formation (Order Maintained): " + trainFormation);
+
+        // 5. Verification
+        System.out.println("Total unique bogies in formation: " + trainFormation.size());
     }
 }
