@@ -1,33 +1,25 @@
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("=== Train Consist Management App — UC2 ===");
+        System.out.println("=== Train Consist Management App — UC3 ===");
 
-        // 1. Create an ArrayList<String> for passenger bogies
-        List<String> passengerBogies = new ArrayList<>();
+        // 1. Create a HashSet<String> for bogie IDs
+        Set<String> bogieIds = new HashSet<>();
 
-        // 2. Add bogies: Sleeper, AC Chair, First Class
-        passengerBogies.add("Sleeper");
-        passengerBogies.add("AC Chair");
-        passengerBogies.add("First Class");
+        // 2. Add multiple bogie IDs, including intentional duplicates
+        bogieIds.add("BG101");
+        bogieIds.add("BG102");
+        bogieIds.add("BG101"); // Intentional duplicate
+        bogieIds.add("BG103");
 
-        // 3. Print the list after insertion
-        System.out.println("Passenger bogies added: " + passengerBogies);
+        // 3. Print the final set
+        System.out.println("Bogie IDs registered: " + bogieIds);
 
-        // 4. Remove one bogie (AC Chair)
-        System.out.println("Removing AC Chair...");
-        passengerBogies.remove("AC Chair");
-
-        // 5. Use contains() to check if Sleeper exists
-        if (passengerBogies.contains("Sleeper")) {
-            System.out.println("Bogie 'Sleeper' exists in the consist.");
-        } else {
-            System.out.println("Bogie 'Sleeper' not found.");
-        }
-
-        // 6. Print final list state
-        System.out.println("Final passenger bogie list: " + passengerBogies);
+        // 4. Observe that duplicates are removed automatically
+        System.out.println("Total unique bogies: " + bogieIds.size());
+        
+        System.out.println("Deduplication logic verified using HashSet.");
     }
 }
