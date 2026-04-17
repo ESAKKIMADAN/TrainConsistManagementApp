@@ -1,21 +1,39 @@
-import java.util.Arrays;
-
 public class Main {
     public static void main(String[] args) {
-        System.out.println("=== Train Consist Management App — UC17 ===");
+        System.out.println("=== Train Consist Management App — UC18 ===");
 
-        // 1. Create an array of bogie type names
-        String[] bogieNames = {"Sleeper", "AC Chair", "First Class", "General", "Luxury"};
+        // 1. Create an array of bogie IDs
+        String[] bogieIds = {"BG101", "BG205", "BG309", "BG412", "BG550"};
 
-        System.out.println("Original Bogie Names: " + Arrays.toString(bogieNames));
+        // 2. Define search targets
+        String searchFoundTarget = "BG309";
+        String searchNotFoundTarget = "BG999";
 
-        // 2. Use Arrays.sort() for optimized alphabetical sorting
-        System.out.println("Sorting bogie names using Arrays.sort()...");
-        Arrays.sort(bogieNames);
+        // 3. Perform Linear Search
+        System.out.println("Searching for bogie IDs in the consist...");
+        
+        displaySearchResult(searchFoundTarget, linearSearch(bogieIds, searchFoundTarget));
+        displaySearchResult(searchNotFoundTarget, linearSearch(bogieIds, searchNotFoundTarget));
 
-        // 3. Display the sorted result
-        System.out.println("Sorted Bogie Names:   " + Arrays.toString(bogieNames));
+        System.out.println("\nSearch operations completed successfully using Sequential Traversal.");
+    }
 
-        System.out.println("\nAlphabetical sorting completed using Java Standard Library.");
+    // Linear Search algorithm: Traverses the array one by one
+    public static boolean linearSearch(String[] arr, String key) {
+        for (String element : arr) {
+            // Compare each element with the search key
+            if (element.equals(key)) {
+                return true; // Match found, terminate search early
+            }
+        }
+        return false; // Traversed entire array, no match found
+    }
+
+    public static void displaySearchResult(String id, boolean found) {
+        if (found) {
+            System.out.println("✔ Bogie Found: " + id + " is present in the train consist.");
+        } else {
+            System.out.println("❌ Bogie Not Found: " + id + " could not be located.");
+        }
     }
 }
