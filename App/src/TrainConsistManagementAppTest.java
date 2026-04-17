@@ -1,89 +1,89 @@
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TrainConsistManagementAppTest {
-    
-    private static final String TRAIN_ID_REGEX = "TRN-\\d{4}";
-    private static final String CARGO_CODE_REGEX = "PET-[A-Z]{2}";
-    private static final Pattern trainIdPattern = Pattern.compile(TRAIN_ID_REGEX);
-    private static final Pattern cargoCodePattern = Pattern.compile(CARGO_CODE_REGEX);
 
     public static void main(String[] args) {
-        System.out.println("--- Running UC11 Regex Validation Tests ---");
-        
-        testRegex_ValidTrainID();
-        testRegex_InvalidTrainIDFormat();
-        testRegex_ValidCargoCode();
-        testRegex_InvalidCargoCodeFormat();
-        testRegex_TrainIDDigitLengthValidation();
-        testRegex_CargoCodeUppercaseValidation();
-        testRegex_EmptyInputHandling();
-        testRegex_ExactPatternMatch();
+        System.out.println("--- Running UC12 Safety Compliance Tests ---");
+
+        testSafety_AllBogiesValid();
+        testSafety_CylindricalWithInvalidCargo();
+        testSafety_NonCylindricalBogiesAllowed();
+        testSafety_MixedBogiesWithViolation();
+        testSafety_EmptyBogieList();
 
         System.out.println("\nAll tests completed.");
     }
 
-    public static void testRegex_ValidTrainID() {
-        String input = "TRN-1234";
-        boolean result = trainIdPattern.matcher(input).matches();
-        printResult("testRegex_ValidTrainID", input, result, true);
+    public static void testSafety_AllBogiesValid() {
+        List<GoodsBogie> bogies = new ArrayList<>();
+        bogies.add(new GoodsBogie("Cylindrical", "Petroleum"));
+        bogies.add(new GoodsBogie("Box", "Coal"));
+
+        boolean result = validateSafety(bogies);
+        printResult("testSafety_AllBogiesValid", result, true);
     }
 
-    public static void testRegex_InvalidTrainIDFormat() {
-        String[] inputs = {"TRAIN12", "TRN12A", "1234-TRN"};
-        for (String input : inputs) {
-            boolean result = trainIdPattern.matcher(input).matches();
-            printResult("testRegex_InvalidTrainIDFormat", input, result, false);
-        }
+    public static void testSafety_CylindricalWithInvalidCargo() {
+        List<GoodsBogie> bogies = new ArrayList<>();
+        bogies.add(new GoodsBogie("Cylindrical", "Coal"));
+
+        boolean result = validateSafety(bogies);
+        printResult("testSafety_CylindricalWithInvalidCargo", result, false);
     }
 
-    public static void testRegex_ValidCargoCode() {
-        String input = "PET-AB";
-        boolean result = cargoCodePattern.matcher(input).matches();
-        printResult("testRegex_ValidCargoCode", input, result, true);
+    public static void testSafety_NonCylindricalBogiesAllowed() {
+        List<GoodsBogie> bogies = new ArrayList<>();
+        bogies.add(new GoodsBogie("Box", "Grain"));
+        bogies.add(new GoodsBogie("Open", "Steel"));
+
+        boolean result = validateSafety(bogies);
+        printResult("testSafety_NonCylindricalBogiesAllowed", result, true);
     }
 
-    public static void testRegex_InvalidCargoCodeFormat() {
-        String[] inputs = {"PET123", "AB-PET"};
-        for (String input : inputs) {
-            boolean result = cargoCodePattern.matcher(input).matches();
-            printResult("testRegex_InvalidCargoCodeFormat", input, result, false);
-        }
+    public static void testSafety_MixedBogiesWithViolation() {
+        List<GoodsBogie> bogies = new ArrayList<>();
+        bogies.add(new GoodsBogie("Box", "Coal"));
+        bogies.add(new GoodsBogie("Cylindrical", "Water")); // Invalid
+
+        boolean result = validateSafety(bogies);
+        printResult("testSafety_MixedBogiesWithViolation", result, false);
     }
 
-    public static void testRegex_TrainIDDigitLengthValidation() {
-        String[] inputs = {"TRN-123", "TRN-12345"};
-        for (String input : inputs) {
-            boolean result = trainIdPattern.matcher(input).matches();
-            printResult("testRegex_TrainIDDigitLengthValidation", input, result, false);
-        }
+    public static void testSafety_EmptyBogieList() {
+        List<GoodsBogie> bogies = new ArrayList<>();
+
+        boolean result = validateSafety(bogies);
+        printResult("testSafety_EmptyBogieList", result, true);
     }
 
-    public static void testRegex_CargoCodeUppercaseValidation() {
-        String input = "PET-ab";
-        boolean result = cargoCodePattern.matcher(input).matches();
-        printResult("testRegex_CargoCodeUppercaseValidation", input, result, false);
+    // Helper method for validation logic
+    private static boolean validateSafety(List<GoodsBogie> bogies) {
+        return bogies.stream().allMatch(b -> 
+            !b.getType().equalsIgnoreCase("Cylindrical") || 
+            b.getCargo().equalsIgnoreCase("Petroleum")
+        );
     }
 
-    public static void testRegex_EmptyInputHandling() {
-        String input = "";
-        boolean trainResult = trainIdPattern.matcher(input).matches();
-        boolean cargoResult = cargoCodePattern.matcher(input).matches();
-        printResult("testRegex_EmptyInputHandling (Train)", input, trainResult, false);
-        printResult("testRegex_EmptyInputHandling (Cargo)", input, cargoResult, false);
-    }
-
-    public static void testRegex_ExactPatternMatch() {
-        String input = "TRN-1234EXTRA";
-        boolean result = trainIdPattern.matcher(input).matches();
-        printResult("testRegex_ExactPatternMatch", input, result, false);
-    }
-
-    private static void printResult(String testName, String input, boolean actual, boolean expected) {
+    private static void printResult(String testName, boolean actual, boolean expected) {
         if (actual == expected) {
-            System.out.println("[PASS] " + testName + " | Input: '" + input + "'");
+            System.out.println("[PASS] " + testName);
         } else {
-            System.out.println("[FAIL] " + testName + " | Input: '" + input + "' | Expected: " + expected + " | Actual: " + actual);
+            System.out.println("[FAIL] " + testName + " | Expected: " + expected + " | Actual: " + actual);
         }
+    }
+
+    // GoodsBogie inner class for testing
+    static class GoodsBogie {
+        private String type;
+        private String cargo;
+
+        public GoodsBogie(String type, String cargo) {
+            this.type = type;
+            this.cargo = cargo;
+        }
+
+        public String getType() { return type; }
+        public String getCargo() { return cargo; }
     }
 }
