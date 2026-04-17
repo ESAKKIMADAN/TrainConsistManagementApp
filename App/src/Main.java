@@ -1,49 +1,43 @@
-import java.util.ArrayList;
-import java.util.List;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("=== Train Consist Management App — UC10 ===");
+        System.out.println("=== Train Consist Management App — UC11 ===");
 
-        // 1. Create a List<Bogie> to store passenger bogies
-        List<Bogie> passengerBogies = new ArrayList<>();
-        passengerBogies.add(new Bogie("Sleeper", 72));
-        passengerBogies.add(new Bogie("AC Chair", 56));
-        passengerBogies.add(new Bogie("First Class", 24));
+        // Define Regex patterns for Train ID and Cargo Code
+        // Train ID: TRN- (fixed) followed by exactly 4 digits
+        String trainIdRegex = "TRN-\\d{4}";
+        // Cargo Code: PET- (fixed) followed by exactly 2 uppercase letters
+        String cargoCodeRegex = "PET-[A-Z]{2}";
 
-        System.out.println("Bogie List: " + passengerBogies);
+        // Compile patterns
+        Pattern trainIdPattern = Pattern.compile(trainIdRegex);
+        Pattern cargoCodePattern = Pattern.compile(cargoCodeRegex);
 
-        // 2. Use the Stream API to calculate total seating capacity
-        System.out.println("Calculating total seating capacity...");
-        int totalSeats = passengerBogies.stream()
-                .map(Bogie::getCapacity)
-                .reduce(0, Integer::sum);
+        // Sample Inputs to Validate
+        String[] testTrainIds = {"TRN-1234", "TRAIN12", "TRN12A", "1234-TRN", "TRN-123", "TRN-12345"};
+        String[] testCargoCodes = {"PET-AB", "PET-ab", "PET123", "AB-PET", "PET-A", "PET-ABC"};
 
-        // 3. Display the total seating capacity
-        System.out.println("Total Seating Capacity of the Train: " + totalSeats + " seats");
-    }
-
-    // Static inner class Bogie
-    static class Bogie {
-        private String name;
-        private int capacity;
-
-        public Bogie(String name, int capacity) {
-            this.name = name;
-            this.capacity = capacity;
+        System.out.println("\n--- Validating Train IDs ---");
+        for (String id : testTrainIds) {
+            Matcher matcher = trainIdPattern.matcher(id);
+            if (matcher.matches()) {
+                System.out.println("VALID Train ID: " + id);
+            } else {
+                System.out.println("INVALID Train ID: " + id);
+            }
         }
 
-        public String getName() {
-            return name;
-        }
-
-        public int getCapacity() {
-            return capacity;
-        }
-
-        @Override
-        public String toString() {
-            return name + " (" + capacity + ")";
+        System.out.println("\n--- Validating Cargo Codes ---");
+        for (String code : testCargoCodes) {
+            Matcher matcher = cargoCodePattern.matcher(code);
+            if (matcher.matches()) {
+                System.out.println("VALID Cargo Code: " + code);
+            } else {
+                System.out.println("INVALID Cargo Code: " + code);
+            }
         }
     }
 }
