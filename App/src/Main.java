@@ -2,50 +2,47 @@ import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("=== Train Consist Management App — UC19 ===");
+        System.out.println("=== Train Consist Management App — UC20 ===");
 
-        // 1. Create an unsorted array of bogie IDs
-        String[] bogieIds = {"BG309", "BG101", "BG550", "BG205", "BG412"};
-
-        System.out.println("Original (Unsorted) IDs: " + Arrays.toString(bogieIds));
-
-        // 2. Precondition: Sort the data before applying Binary Search
-        System.out.println("Sorting bogie IDs for optimized lookup...");
-        Arrays.sort(bogieIds);
-        System.out.println("Sorted IDs: " + Arrays.toString(bogieIds));
-
-        // 3. Perform Binary Search
-        String searchTarget = "BG309";
-        System.out.println("\nSearching for bogie ID: " + searchTarget);
-        
-        boolean found = binarySearch(bogieIds, searchTarget);
-        
-        if (found) {
-            System.out.println("✔ Result: Bogie " + searchTarget + " found efficiently using Binary Search.");
-        } else {
-            System.out.println("❌ Result: Bogie " + searchTarget + " could not be located.");
+        // 1. Case: Search attempt on an empty train consist
+        String[] emptyBogieIds = {};
+        System.out.println("\n--- Testing Search on Empty Consist ---");
+        try {
+            executeSearch(emptyBogieIds, "BG101");
+        } catch (IllegalStateException e) {
+            System.err.println("FAIL-FAST ERROR: " + e.getMessage());
         }
 
-        System.out.println("\nSearch operation completed using Divide-and-Conquer Strategy.");
+        // 2. Case: Search attempt on a populated train consist
+        String[] populatedBogieIds = {"BG101", "BG205", "BG309", "BG412", "BG550"};
+        System.out.println("\n--- Testing Search on Populated Consist ---");
+        try {
+            executeSearch(populatedBogieIds, "BG309");
+            executeSearch(populatedBogieIds, "BG999");
+        } catch (IllegalStateException e) {
+            System.err.println("Unexpected Error: " + e.getMessage());
+        }
+
+        System.out.println("\nProgram continued safely after handling state-based exceptions.");
     }
 
-    // Binary Search algorithm: Repeatedly halves the search range
-    public static boolean binarySearch(String[] arr, String key) {
-        int low = 0;
-        int high = arr.length - 1;
-
-        while (low <= high) {
-            int mid = low + (high - low) / 2;
-            int comparison = arr[mid].compareTo(key);
-
-            if (comparison == 0) {
-                return true; // Match found at middle
-            } else if (comparison < 0) {
-                low = mid + 1; // Search right half
-            } else {
-                high = mid - 1; // Search left half
-            }
+    // executeSearch method with defensive validation
+    public static void executeSearch(String[] bogieIds, String target) {
+        // Validation Step: Throw IllegalStateException if data is missing
+        if (bogieIds == null || bogieIds.length == 0) {
+            throw new IllegalStateException("Cannot search in an empty train consist. Please add bogies first.");
         }
-        return false; // Search range exhausted
+
+        System.out.println("Validating train consist state... PASSED.");
+        
+        // Use Binary Search (from UC19 logic)
+        // Note: For binary search, data must be sorted. bogieIds are already sorted here.
+        int result = Arrays.binarySearch(bogieIds, target);
+
+        if (result >= 0) {
+            System.out.println("✔ Bogie Found: " + target + " is present.");
+        } else {
+            System.out.println("❌ Bogie Not Found: " + target + " is not in the list.");
+        }
     }
 }
