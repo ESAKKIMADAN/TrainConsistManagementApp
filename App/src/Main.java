@@ -1,58 +1,40 @@
 public class Main {
     public static void main(String[] args) {
-        System.out.println("=== Train Consist Management App — UC15 ===");
+        System.out.println("=== Train Consist Management App — UC16 ===");
 
-        // 1. Create goods bogies
-        GoodsBogie cylindrical = new GoodsBogie("Cylindrical");
-        GoodsBogie rectangular = new GoodsBogie("Rectangular");
+        // 1. Create an array of passenger bogie capacities
+        int[] capacities = {72, 56, 24, 70, 60};
 
-        // 2. Attempt safe cargo assignment
-        assignCargoToBogie(cylindrical, "Petroleum");
+        System.out.print("Original Capacities: ");
+        printArray(capacities);
 
-        // 3. Attempt unsafe cargo assignment
-        assignCargoToBogie(rectangular, "Petroleum");
-
-        System.out.println("\nProgram execution continued safely after operation attempts.");
-    }
-
-    // Helper method to demonstrate try-catch-finally
-    public static void assignCargoToBogie(GoodsBogie bogie, String cargo) {
-        System.out.println("\n--- Attempting to assign " + cargo + " to " + bogie.getShape() + " bogie ---");
-        try {
-            bogie.assignCargo(cargo);
-            System.out.println("SUCCESS: Cargo assigned successfully.");
-        } catch (CargoSafetyException e) {
-            System.err.println("SAFETY ERROR: " + e.getMessage());
-        } finally {
-            System.out.println("NOTIFICATION: Cargo assignment validation process completed.");
-        }
-    }
-
-    // Custom Runtime Exception for cargo safety
-    static class CargoSafetyException extends RuntimeException {
-        public CargoSafetyException(String message) {
-            super(message);
-        }
-    }
-
-    // GoodsBogie class with operational safety logic
-    static class GoodsBogie {
-        private String shape;
-        private String cargo;
-
-        public GoodsBogie(String shape) {
-            this.shape = shape;
-        }
-
-        public void assignCargo(String newCargo) {
-            // Unsafe rule: Petroleum cannot be assigned to Rectangular bogies
-            if (shape.equalsIgnoreCase("Rectangular") && newCargo.equalsIgnoreCase("Petroleum")) {
-                throw new CargoSafetyException("UNSAFE ASSIGNMENT: Petroleum cannot be carried in Rectangular bogies due to fire hazard.");
+        // 2. Implement Bubble Sort Algorithm
+        // External loop for passes over the array
+        for (int i = 0; i < capacities.length - 1; i++) {
+            // Internal loop for comparing adjacent elements
+            for (int j = 0; j < capacities.length - 1 - i; j++) {
+                if (capacities[j] > capacities[j + 1]) {
+                    // Swap values if they are out of order
+                    int temp = capacities[j];
+                    capacities[j] = capacities[j + 1];
+                    capacities[j + 1] = temp;
+                }
             }
-            this.cargo = newCargo;
         }
 
-        public String getShape() { return shape; }
-        public String getCargo() { return cargo; }
+        // 3. Display the sorted capacities
+        System.out.print("Sorted Capacities (Bubble Sort): ");
+        printArray(capacities);
+
+        System.out.println("\nSorting completed successfully without library methods.");
+    }
+
+    // Helper method to print array elements
+    public static void printArray(int[] arr) {
+        System.out.print("[ ");
+        for (int i = 0; i < arr.length; i++) {
+            System.out.print(arr[i] + (i == arr.length - 1 ? "" : ", "));
+        }
+        System.out.println(" ]");
     }
 }
