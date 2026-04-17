@@ -1,39 +1,51 @@
+import java.util.Arrays;
+
 public class Main {
     public static void main(String[] args) {
-        System.out.println("=== Train Consist Management App — UC18 ===");
+        System.out.println("=== Train Consist Management App — UC19 ===");
 
-        // 1. Create an array of bogie IDs
-        String[] bogieIds = {"BG101", "BG205", "BG309", "BG412", "BG550"};
+        // 1. Create an unsorted array of bogie IDs
+        String[] bogieIds = {"BG309", "BG101", "BG550", "BG205", "BG412"};
 
-        // 2. Define search targets
-        String searchFoundTarget = "BG309";
-        String searchNotFoundTarget = "BG999";
+        System.out.println("Original (Unsorted) IDs: " + Arrays.toString(bogieIds));
 
-        // 3. Perform Linear Search
-        System.out.println("Searching for bogie IDs in the consist...");
+        // 2. Precondition: Sort the data before applying Binary Search
+        System.out.println("Sorting bogie IDs for optimized lookup...");
+        Arrays.sort(bogieIds);
+        System.out.println("Sorted IDs: " + Arrays.toString(bogieIds));
+
+        // 3. Perform Binary Search
+        String searchTarget = "BG309";
+        System.out.println("\nSearching for bogie ID: " + searchTarget);
         
-        displaySearchResult(searchFoundTarget, linearSearch(bogieIds, searchFoundTarget));
-        displaySearchResult(searchNotFoundTarget, linearSearch(bogieIds, searchNotFoundTarget));
+        boolean found = binarySearch(bogieIds, searchTarget);
+        
+        if (found) {
+            System.out.println("✔ Result: Bogie " + searchTarget + " found efficiently using Binary Search.");
+        } else {
+            System.out.println("❌ Result: Bogie " + searchTarget + " could not be located.");
+        }
 
-        System.out.println("\nSearch operations completed successfully using Sequential Traversal.");
+        System.out.println("\nSearch operation completed using Divide-and-Conquer Strategy.");
     }
 
-    // Linear Search algorithm: Traverses the array one by one
-    public static boolean linearSearch(String[] arr, String key) {
-        for (String element : arr) {
-            // Compare each element with the search key
-            if (element.equals(key)) {
-                return true; // Match found, terminate search early
+    // Binary Search algorithm: Repeatedly halves the search range
+    public static boolean binarySearch(String[] arr, String key) {
+        int low = 0;
+        int high = arr.length - 1;
+
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+            int comparison = arr[mid].compareTo(key);
+
+            if (comparison == 0) {
+                return true; // Match found at middle
+            } else if (comparison < 0) {
+                low = mid + 1; // Search right half
+            } else {
+                high = mid - 1; // Search left half
             }
         }
-        return false; // Traversed entire array, no match found
-    }
-
-    public static void displaySearchResult(String id, boolean found) {
-        if (found) {
-            System.out.println("✔ Bogie Found: " + id + " is present in the train consist.");
-        } else {
-            System.out.println("❌ Bogie Not Found: " + id + " could not be located.");
-        }
+        return false; // Search range exhausted
     }
 }

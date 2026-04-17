@@ -1,51 +1,75 @@
+import java.util.Arrays;
+
 public class TrainConsistManagementAppTest {
 
     public static void main(String[] args) {
-        System.out.println("--- Running UC18 Linear Search Tests ---");
+        System.out.println("--- Running UC19 Binary Search Tests ---");
 
-        testSearch_BogieFound();
-        testSearch_BogieNotFound();
-        testSearch_FirstElementMatch();
-        testSearch_LastElementMatch();
-        testSearch_SingleElementArray();
+        testBinarySearch_BogieFound();
+        testBinarySearch_BogieNotFound();
+        testBinarySearch_FirstElementMatch();
+        testBinarySearch_LastElementMatch();
+        testBinarySearch_SingleElementArray();
+        testBinarySearch_EmptyArray();
+        testBinarySearch_UnsortedInputHandled();
 
         System.out.println("\nAll tests completed.");
     }
 
-    public static void testSearch_BogieFound() {
+    public static void testBinarySearch_BogieFound() {
         String[] dataset = {"BG101", "BG205", "BG309", "BG412", "BG550"};
-        boolean result = linearSearch(dataset, "BG309");
-        printResult("testSearch_BogieFound", result, true);
+        boolean result = binarySearch(dataset, "BG309");
+        printResult("testBinarySearch_BogieFound", result, true);
     }
 
-    public static void testSearch_BogieNotFound() {
+    public static void testBinarySearch_BogieNotFound() {
         String[] dataset = {"BG101", "BG205", "BG309", "BG412", "BG550"};
-        boolean result = linearSearch(dataset, "BG999");
-        printResult("testSearch_BogieNotFound", result, false);
+        boolean result = binarySearch(dataset, "BG999");
+        printResult("testBinarySearch_BogieNotFound", result, false);
     }
 
-    public static void testSearch_FirstElementMatch() {
+    public static void testBinarySearch_FirstElementMatch() {
         String[] dataset = {"BG101", "BG205", "BG309", "BG412", "BG550"};
-        boolean result = linearSearch(dataset, "BG101");
-        printResult("testSearch_FirstElementMatch", result, true);
+        boolean result = binarySearch(dataset, "BG101");
+        printResult("testBinarySearch_FirstElementMatch", result, true);
     }
 
-    public static void testSearch_LastElementMatch() {
+    public static void testBinarySearch_LastElementMatch() {
         String[] dataset = {"BG101", "BG205", "BG309", "BG412", "BG550"};
-        boolean result = linearSearch(dataset, "BG550");
-        printResult("testSearch_LastElementMatch", result, true);
+        boolean result = binarySearch(dataset, "BG550");
+        printResult("testBinarySearch_LastElementMatch", result, true);
     }
 
-    public static void testSearch_SingleElementArray() {
+    public static void testBinarySearch_SingleElementArray() {
         String[] dataset = {"BG101"};
-        boolean result = linearSearch(dataset, "BG101");
-        printResult("testSearch_SingleElementArray", result, true);
+        boolean result = binarySearch(dataset, "BG101");
+        printResult("testBinarySearch_SingleElementArray", result, true);
     }
 
-    // Linear Search implementation for testing
-    private static boolean linearSearch(String[] arr, String key) {
-        for (String s : arr) {
-            if (s.equals(key)) return true;
+    public static void testBinarySearch_EmptyArray() {
+        String[] dataset = {};
+        boolean result = binarySearch(dataset, "BG101");
+        printResult("testBinarySearch_EmptyArray", result, false);
+    }
+
+    public static void testBinarySearch_UnsortedInputHandled() {
+        String[] dataset = {"BG309", "BG101", "BG550", "BG205", "BG412"};
+        // Pre-sort before searching
+        Arrays.sort(dataset);
+        boolean result = binarySearch(dataset, "BG205");
+        printResult("testBinarySearch_UnsortedInputHandled", result, true);
+    }
+
+    // Binary Search implementation for testing
+    private static boolean binarySearch(String[] arr, String key) {
+        int low = 0;
+        int high = arr.length - 1;
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+            int comparison = arr[mid].compareTo(key);
+            if (comparison == 0) return true;
+            else if (comparison < 0) low = mid + 1;
+            else high = mid - 1;
         }
         return false;
     }
