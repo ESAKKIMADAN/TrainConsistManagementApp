@@ -1,82 +1,73 @@
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 public class TrainConsistManagementAppTest {
 
     public static void main(String[] args) {
-        System.out.println("--- Running UC13 Performance Comparison Tests ---");
+        System.out.println("--- Running UC14 Exception Validation Tests ---");
 
-        testLoopFilteringLogic();
-        testStreamFilteringLogic();
-        testLoopAndStreamResultsMatch();
-        testExecutionTimeMeasurement();
-        testLargeDatasetProcessing();
+        testException_ValidCapacityCreation();
+        testException_NegativeCapacityThrowsException();
+        testException_ZeroCapacityThrowsException();
+        testException_ExceptionMessageValidation();
+        testException_ObjectIntegrityAfterCreation();
+        testException_MultipleValidBogiesCreation();
 
         System.out.println("\nAll tests completed.");
     }
 
-    public static void testLoopFilteringLogic() {
-        List<Bogie> bogies = createTestBogies(10);
-        List<Bogie> filtered = new ArrayList<>();
-        for (Bogie b : bogies) {
-            if (b.getCapacity() > 60) filtered.add(b);
+    public static void testException_ValidCapacityCreation() {
+        try {
+            Bogie b = new Bogie("Sleeper", 72);
+            printResult("testException_ValidCapacityCreation", true, true);
+        } catch (InvalidCapacityException e) {
+            printResult("testException_ValidCapacityCreation", false, true);
         }
-        boolean result = filtered.stream().allMatch(b -> b.getCapacity() > 60);
-        printResult("testLoopFilteringLogic", result, true);
     }
 
-    public static void testStreamFilteringLogic() {
-        List<Bogie> bogies = createTestBogies(10);
-        List<Bogie> filtered = bogies.stream()
-                .filter(b -> b.getCapacity() > 60)
-                .collect(Collectors.toList());
-        boolean result = filtered.stream().allMatch(b -> b.getCapacity() > 60);
-        printResult("testStreamFilteringLogic", result, true);
-    }
-
-    public static void testLoopAndStreamResultsMatch() {
-        List<Bogie> bogies = createTestBogies(100);
-        
-        // Loop
-        List<Bogie> loopFiltered = new ArrayList<>();
-        for (Bogie b : bogies) if (b.getCapacity() > 60) loopFiltered.add(b);
-        
-        // Stream
-        List<Bogie> streamFiltered = bogies.stream()
-                .filter(b -> b.getCapacity() > 60)
-                .collect(Collectors.toList());
-        
-        boolean result = (loopFiltered.size() == streamFiltered.size());
-        printResult("testLoopAndStreamResultsMatch", result, true);
-    }
-
-    public static void testExecutionTimeMeasurement() {
-        long start = System.nanoTime();
-        // Small delay
-        for(int i=0; i<1000; i++) { Math.sqrt(i); }
-        long end = System.nanoTime();
-        boolean result = (end - start) > 0;
-        printResult("testExecutionTimeMeasurement", result, true);
-    }
-
-    public static void testLargeDatasetProcessing() {
-        List<Bogie> bogies = createTestBogies(10000);
-        long start = System.nanoTime();
-        List<Bogie> filtered = bogies.stream()
-                .filter(b -> b.getCapacity() > 60)
-                .collect(Collectors.toList());
-        long end = System.nanoTime();
-        boolean result = (end - start) > 0 && filtered.size() > 0;
-        printResult("testLargeDatasetProcessing", result, true);
-    }
-
-    private static List<Bogie> createTestBogies(int count) {
-        List<Bogie> bogies = new ArrayList<>();
-        for (int i = 0; i < count; i++) {
-            bogies.add(new Bogie("B" + i, (i % 100))); // Distribute capacities 0-99
+    public static void testException_NegativeCapacityThrowsException() {
+        try {
+            new Bogie("Sleeper", -10);
+            printResult("testException_NegativeCapacityThrowsException", false, true);
+        } catch (InvalidCapacityException e) {
+            printResult("testException_NegativeCapacityThrowsException", true, true);
         }
-        return bogies;
+    }
+
+    public static void testException_ZeroCapacityThrowsException() {
+        try {
+            new Bogie("Sleeper", 0);
+            printResult("testException_ZeroCapacityThrowsException", false, true);
+        } catch (InvalidCapacityException e) {
+            printResult("testException_ZeroCapacityThrowsException", true, true);
+        }
+    }
+
+    public static void testException_ExceptionMessageValidation() {
+        try {
+            new Bogie("Sleeper", 0);
+        } catch (InvalidCapacityException e) {
+            boolean result = e.getMessage().equals("Capacity must be greater than zero");
+            printResult("testException_ExceptionMessageValidation", result, true);
+        }
+    }
+
+    public static void testException_ObjectIntegrityAfterCreation() {
+        try {
+            Bogie b = new Bogie("AC Chair", 56);
+            boolean result = b.type.equals("AC Chair") && b.capacity == 56;
+            printResult("testException_ObjectIntegrityAfterCreation", result, true);
+        } catch (InvalidCapacityException e) {
+            printResult("testException_ObjectIntegrityAfterCreation", false, true);
+        }
+    }
+
+    public static void testException_MultipleValidBogiesCreation() {
+        try {
+            new Bogie("S1", 72);
+            new Bogie("S2", 72);
+            new Bogie("A1", 56);
+            printResult("testException_MultipleValidBogiesCreation", true, true);
+        } catch (InvalidCapacityException e) {
+            printResult("testException_MultipleValidBogiesCreation", false, true);
+        }
     }
 
     private static void printResult(String testName, boolean actual, boolean expected) {
@@ -87,13 +78,18 @@ public class TrainConsistManagementAppTest {
         }
     }
 
+    // Classes repeated here for standalone test execution
+    static class InvalidCapacityException extends Exception {
+        public InvalidCapacityException(String message) { super(message); }
+    }
+
     static class Bogie {
-        private String id;
-        private int capacity;
-        public Bogie(String id, int capacity) {
-            this.id = id;
+        String type;
+        int capacity;
+        public Bogie(String type, int capacity) throws InvalidCapacityException {
+            if (capacity <= 0) throw new InvalidCapacityException("Capacity must be greater than zero");
+            this.type = type;
             this.capacity = capacity;
         }
-        public int getCapacity() { return capacity; }
     }
 }
