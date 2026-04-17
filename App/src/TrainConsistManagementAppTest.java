@@ -1,97 +1,69 @@
+import java.util.Arrays;
+
 public class TrainConsistManagementAppTest {
 
     public static void main(String[] args) {
-        System.out.println("--- Running UC15 Cargo Safety Validation Tests ---");
+        System.out.println("--- Running UC16 Bubble Sort Tests ---");
 
-        testCargo_SafeAssignment();
-        testCargo_UnsafeAssignmentHandled();
-        testCargo_CargoNotAssignedAfterFailure();
-        testCargo_ProgramContinuesAfterException();
-        testCargo_FinallyBlockExecution();
+        testSort_BasicSorting();
+        testSort_AlreadySortedArray();
+        testSort_DuplicateValues();
+        testSort_SingleElementArray();
+        testSort_AllEqualValues();
 
         System.out.println("\nAll tests completed.");
     }
 
-    public static void testCargo_SafeAssignment() {
-        GoodsBogie b = new GoodsBogie("Cylindrical");
-        try {
-            b.assignCargo("Petroleum");
-            boolean result = b.cargo.equals("Petroleum");
-            printResult("testCargo_SafeAssignment", result, true);
-        } catch (CargoSafetyException e) {
-            printResult("testCargo_SafeAssignment", false, true);
-        }
+    public static void testSort_BasicSorting() {
+        int[] input = {72, 56, 24, 70, 60};
+        int[] expected = {24, 56, 60, 70, 72};
+        bubbleSort(input);
+        printResult("testSort_BasicSorting", Arrays.equals(input, expected));
     }
 
-    public static void testCargo_UnsafeAssignmentHandled() {
-        GoodsBogie b = new GoodsBogie("Rectangular");
-        try {
-            b.assignCargo("Petroleum");
-            printResult("testCargo_UnsafeAssignmentHandled", false, true);
-        } catch (CargoSafetyException e) {
-            printResult("testCargo_UnsafeAssignmentHandled", true, true);
-        }
+    public static void testSort_AlreadySortedArray() {
+        int[] input = {24, 56, 60, 70, 72};
+        int[] expected = {24, 56, 60, 70, 72};
+        bubbleSort(input);
+        printResult("testSort_AlreadySortedArray", Arrays.equals(input, expected));
     }
 
-    public static void testCargo_CargoNotAssignedAfterFailure() {
-        GoodsBogie b = new GoodsBogie("Rectangular");
-        try {
-            b.assignCargo("Petroleum");
-        } catch (CargoSafetyException e) {
-            boolean result = (b.cargo == null);
-            printResult("testCargo_CargoNotAssignedAfterFailure", result, true);
-        }
+    public static void testSort_DuplicateValues() {
+        int[] input = {72, 56, 56, 24};
+        int[] expected = {24, 56, 56, 72};
+        bubbleSort(input);
+        printResult("testSort_DuplicateValues", Arrays.equals(input, expected));
     }
 
-    public static void testCargo_ProgramContinuesAfterException() {
-        boolean executionFlowMaintained = false;
-        try {
-            GoodsBogie b1 = new GoodsBogie("Rectangular");
-            b1.assignCargo("Petroleum"); // This fails
-        } catch (CargoSafetyException e) {
-            // Program continues...
-            GoodsBogie b2 = new GoodsBogie("Cylindrical");
-            b2.assignCargo("Petroleum"); // This succeeds
-            executionFlowMaintained = b2.cargo.equals("Petroleum");
-        }
-        printResult("testCargo_ProgramContinuesAfterException", executionFlowMaintained, true);
+    public static void testSort_SingleElementArray() {
+        int[] input = {50};
+        int[] expected = {50};
+        bubbleSort(input);
+        printResult("testSort_SingleElementArray", Arrays.equals(input, expected));
     }
 
-    public static void testCargo_FinallyBlockExecution() {
-        final boolean[] finallyExecuted = {false};
-        try {
-            GoodsBogie b = new GoodsBogie("Rectangular");
-            b.assignCargo("Petroleum");
-        } catch (CargoSafetyException e) {
-            // handle
-        } finally {
-            finallyExecuted[0] = true;
-        }
-        printResult("testCargo_FinallyBlockExecution", finallyExecuted[0], true);
+    public static void testSort_AllEqualValues() {
+        int[] input = {40, 40, 40};
+        int[] expected = {40, 40, 40};
+        bubbleSort(input);
+        printResult("testSort_AllEqualValues", Arrays.equals(input, expected));
     }
 
-    private static void printResult(String testName, boolean actual, boolean expected) {
-        if (actual == expected) {
-            System.out.println("[PASS] " + testName);
-        } else {
-            System.out.println("[FAIL] " + testName + " | Expected: " + expected + " | Actual: " + actual);
-        }
-    }
-
-    // Repeated logic for testing
-    static class CargoSafetyException extends RuntimeException {
-        public CargoSafetyException(String message) { super(message); }
-    }
-
-    static class GoodsBogie {
-        String shape;
-        String cargo;
-        public GoodsBogie(String shape) { this.shape = shape; }
-        public void assignCargo(String newCargo) {
-            if (shape.equalsIgnoreCase("Rectangular") && newCargo.equalsIgnoreCase("Petroleum")) {
-                throw new CargoSafetyException("unsafe");
+    // Manual Bubble Sort implementation for testing
+    private static void bubbleSort(int[] arr) {
+        int n = arr.length;
+        for (int i = 0; i < n - 1; i++) {
+            for (int j = 0; j < n - 1 - i; j++) {
+                if (arr[j] > arr[j + 1]) {
+                    int temp = arr[j];
+                    arr[j] = arr[j + 1];
+                    arr[j + 1] = temp;
+                }
             }
-            this.cargo = newCargo;
         }
+    }
+
+    private static void printResult(String testName, boolean success) {
+        System.out.println((success ? "[PASS] " : "[FAIL] ") + testName);
     }
 }
