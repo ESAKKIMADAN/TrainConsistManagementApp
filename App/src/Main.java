@@ -1,61 +1,58 @@
-import java.util.ArrayList;
-import java.util.List;
-
 public class Main {
     public static void main(String[] args) {
-        System.out.println("=== Train Consist Management App — UC14 ===");
+        System.out.println("=== Train Consist Management App — UC15 ===");
 
-        try {
-            // 1. Attempt to create valid bogies
-            System.out.println("Creating valid bogies...");
-            Bogie sleeper = new Bogie("Sleeper", 72);
-            Bogie acChair = new Bogie("AC Chair", 56);
-            System.out.println("Successfully created: " + sleeper);
-            System.out.println("Successfully created: " + acChair);
+        // 1. Create goods bogies
+        GoodsBogie cylindrical = new GoodsBogie("Cylindrical");
+        GoodsBogie rectangular = new GoodsBogie("Rectangular");
 
-            // 2. Attempt to create an invalid bogie (Zero Capacity)
-            System.out.println("\nAttempting to create a bogie with zero capacity...");
-            Bogie invalidZero = new Bogie("Broken Bogie", 0);
-            
-        } catch (InvalidCapacityException e) {
-            System.err.println("ERROR: " + e.getMessage());
-        }
+        // 2. Attempt safe cargo assignment
+        assignCargoToBogie(cylindrical, "Petroleum");
 
-        try {
-            // 3. Attempt to create an invalid bogie (Negative Capacity)
-            System.out.println("\nAttempting to create a bogie with negative capacity...");
-            Bogie invalidNegative = new Bogie("Ghost Bogie", -10);
+        // 3. Attempt unsafe cargo assignment
+        assignCargoToBogie(rectangular, "Petroleum");
 
-        } catch (InvalidCapacityException e) {
-            System.err.println("ERROR: " + e.getMessage());
-        }
-
-        System.out.println("\nProgram execution continued safely after handling exceptions.");
+        System.out.println("\nProgram execution continued safely after operation attempts.");
     }
 
-    // Custom Exception for bogie capacity validation
-    static class InvalidCapacityException extends Exception {
-        public InvalidCapacityException(String message) {
+    // Helper method to demonstrate try-catch-finally
+    public static void assignCargoToBogie(GoodsBogie bogie, String cargo) {
+        System.out.println("\n--- Attempting to assign " + cargo + " to " + bogie.getShape() + " bogie ---");
+        try {
+            bogie.assignCargo(cargo);
+            System.out.println("SUCCESS: Cargo assigned successfully.");
+        } catch (CargoSafetyException e) {
+            System.err.println("SAFETY ERROR: " + e.getMessage());
+        } finally {
+            System.out.println("NOTIFICATION: Cargo assignment validation process completed.");
+        }
+    }
+
+    // Custom Runtime Exception for cargo safety
+    static class CargoSafetyException extends RuntimeException {
+        public CargoSafetyException(String message) {
             super(message);
         }
     }
 
-    // Bogie class with fail-fast validation in constructor
-    static class Bogie {
-        private String type;
-        private int capacity;
+    // GoodsBogie class with operational safety logic
+    static class GoodsBogie {
+        private String shape;
+        private String cargo;
 
-        public Bogie(String type, int capacity) throws InvalidCapacityException {
-            if (capacity <= 0) {
-                throw new InvalidCapacityException("Capacity must be greater than zero");
+        public GoodsBogie(String shape) {
+            this.shape = shape;
+        }
+
+        public void assignCargo(String newCargo) {
+            // Unsafe rule: Petroleum cannot be assigned to Rectangular bogies
+            if (shape.equalsIgnoreCase("Rectangular") && newCargo.equalsIgnoreCase("Petroleum")) {
+                throw new CargoSafetyException("UNSAFE ASSIGNMENT: Petroleum cannot be carried in Rectangular bogies due to fire hazard.");
             }
-            this.type = type;
-            this.capacity = capacity;
+            this.cargo = newCargo;
         }
 
-        @Override
-        public String toString() {
-            return type + " (Capacity: " + capacity + ")";
-        }
+        public String getShape() { return shape; }
+        public String getCargo() { return cargo; }
     }
 }
