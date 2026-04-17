@@ -1,55 +1,56 @@
-import java.util.Arrays;
-
 public class TrainConsistManagementAppTest {
 
     public static void main(String[] args) {
-        System.out.println("--- Running UC17 Alphabetical Sorting Tests ---");
+        System.out.println("--- Running UC18 Linear Search Tests ---");
 
-        testSort_BasicAlphabeticalSorting();
-        testSort_UnsortedInput();
-        testSort_AlreadySortedArray();
-        testSort_DuplicateBogieNames();
-        testSort_SingleElementArray();
+        testSearch_BogieFound();
+        testSearch_BogieNotFound();
+        testSearch_FirstElementMatch();
+        testSearch_LastElementMatch();
+        testSearch_SingleElementArray();
 
         System.out.println("\nAll tests completed.");
     }
 
-    public static void testSort_BasicAlphabeticalSorting() {
-        String[] input = {"Sleeper", "AC Chair", "First Class", "General", "Luxury"};
-        String[] expected = {"AC Chair", "First Class", "General", "Luxury", "Sleeper"};
-        Arrays.sort(input);
-        printResult("testSort_BasicAlphabeticalSorting", Arrays.equals(input, expected));
+    public static void testSearch_BogieFound() {
+        String[] dataset = {"BG101", "BG205", "BG309", "BG412", "BG550"};
+        boolean result = linearSearch(dataset, "BG309");
+        printResult("testSearch_BogieFound", result, true);
     }
 
-    public static void testSort_UnsortedInput() {
-        String[] input = {"Luxury", "General", "Sleeper", "AC Chair"};
-        String[] expected = {"AC Chair", "General", "Luxury", "Sleeper"};
-        Arrays.sort(input);
-        printResult("testSort_UnsortedInput", Arrays.equals(input, expected));
+    public static void testSearch_BogieNotFound() {
+        String[] dataset = {"BG101", "BG205", "BG309", "BG412", "BG550"};
+        boolean result = linearSearch(dataset, "BG999");
+        printResult("testSearch_BogieNotFound", result, false);
     }
 
-    public static void testSort_AlreadySortedArray() {
-        String[] input = {"AC Chair", "First Class", "General"};
-        String[] expected = {"AC Chair", "First Class", "General"};
-        Arrays.sort(input);
-        printResult("testSort_AlreadySortedArray", Arrays.equals(input, expected));
+    public static void testSearch_FirstElementMatch() {
+        String[] dataset = {"BG101", "BG205", "BG309", "BG412", "BG550"};
+        boolean result = linearSearch(dataset, "BG101");
+        printResult("testSearch_FirstElementMatch", result, true);
     }
 
-    public static void testSort_DuplicateBogieNames() {
-        String[] input = {"Sleeper", "AC Chair", "Sleeper", "General"};
-        String[] expected = {"AC Chair", "General", "Sleeper", "Sleeper"};
-        Arrays.sort(input);
-        printResult("testSort_DuplicateBogieNames", Arrays.equals(input, expected));
+    public static void testSearch_LastElementMatch() {
+        String[] dataset = {"BG101", "BG205", "BG309", "BG412", "BG550"};
+        boolean result = linearSearch(dataset, "BG550");
+        printResult("testSearch_LastElementMatch", result, true);
     }
 
-    public static void testSort_SingleElementArray() {
-        String[] input = {"Sleeper"};
-        String[] expected = {"Sleeper"};
-        Arrays.sort(input);
-        printResult("testSort_SingleElementArray", Arrays.equals(input, expected));
+    public static void testSearch_SingleElementArray() {
+        String[] dataset = {"BG101"};
+        boolean result = linearSearch(dataset, "BG101");
+        printResult("testSearch_SingleElementArray", result, true);
     }
 
-    private static void printResult(String testName, boolean success) {
-        System.out.println((success ? "[PASS] " : "[FAIL] ") + testName);
+    // Linear Search implementation for testing
+    private static boolean linearSearch(String[] arr, String key) {
+        for (String s : arr) {
+            if (s.equals(key)) return true;
+        }
+        return false;
+    }
+
+    private static void printResult(String testName, boolean actual, boolean expected) {
+        System.out.println((actual == expected ? "[PASS] " : "[FAIL] ") + testName);
     }
 }
